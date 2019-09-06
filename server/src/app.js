@@ -1,17 +1,20 @@
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
+const { sequelize } = require('./models')
 
 const app = express()
+
+const { port } = require('./config/config')
 
 app.use(morgan('combined'))
 app.use(express.json())
 app.use(cors())
 
-app.post('/register', (req, res) => {
-  res.json({
-    message: `Hello ${req.body.email}! Your user was registered! Have fun!`
-  })
-})
+require('./routes.js')(app)
 
-app.listen(process.env.PORT || 8081)
+sequelize.sync()
+  .then(() => {
+    app.listen(port)
+    console.log(`Server running on : http://localhost:${port}`)
+  })
