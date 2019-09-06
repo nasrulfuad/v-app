@@ -7,6 +7,7 @@
 /client/test/unit/coverage/
 /client/test/e2e/reports/
 /client/selenium-debug.log
+/client/yarn.lock
 # Editor directories and files
 /client/.idea
 /client/.vscode
@@ -16,3 +17,4 @@
 /client/*.sln
 
 /server/node_modules
+/server/yarn.lock
