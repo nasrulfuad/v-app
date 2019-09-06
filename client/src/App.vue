@@ -1,13 +1,17 @@
 <template>
   <div id="app">
-    <!-- <img src="./assets/logo.png" /> -->
+    <page-header />
     <router-view />
   </div>
 </template>
 
 <script>
+import PageHeader from './components/Header'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    PageHeader
+  }
 }
 </script>
 
@@ -19,5 +23,8 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.input-group--text-field input {
+  border-bottom: .5px solid black;
 }
 </style>
