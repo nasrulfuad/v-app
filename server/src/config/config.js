@@ -6,7 +6,11 @@ module.exports = {
     password: process.env.DB_PASS || '`',
     options: {
       dialect: process.env.DIALECT || 'mysql',
-      host: process.env.HOST || 'localhost'
+      host: process.env.HOST || 'localhost',
+      define: {
+        charset: 'utf8',
+        collate: 'utf8_bin'
+      }
     }
   },
   authentication: {
