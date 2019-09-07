@@ -6,7 +6,7 @@ module.exports = app => {
   app.post('/register', AuthenticationControllerPolicy.register, AuthenticationController.register)
   app.post('/login', AuthenticationController.login)
 
-  app.get('/surahs', SurahController.index)
-  app.post('/surahs', SurahController.generateSurahs)
-  app.post('/ayahs/:surah', SurahController.generateAyahs)
+  app.get('/surah', SurahController.index)
+  app.post('/surah/:surah', SurahController.generateAyahs)
+  app.get('/surah/:surah', SurahController.index)
 }

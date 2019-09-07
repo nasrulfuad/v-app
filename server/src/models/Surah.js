@@ -1,9 +1,5 @@
 module.exports = (sequelize, DataTypes) =>
   sequelize.define('Surah', {
-    number: {
-      type: DataTypes.INTEGER,
-      primaryKey: true
-    },
     name: DataTypes.TEXT,
     englishName: DataTypes.STRING,
     englishNameTranslation: DataTypes.STRING,
