@@ -3,25 +3,23 @@
     <v-flex xs6 offset-xs3>
       <div class="white elevation-2">
         <v-toolbar flat dense class="primary" light>
-          <v-toolbar-title class="white--text">Register</v-toolbar-title>
+          <v-toolbar-title class="white--text">Login</v-toolbar-title>
         </v-toolbar>
         <div class="pl-4 pr-4 pt-2 pb-2">
-          <form autocomplete="off">
-            <v-text-field
-              name="email"
-              label="Email"
-              v-model="email"
-            ></v-text-field>
-            <v-text-field
-              name="password"
-              label="Password"
-              type="password"
-              v-model="password"
-            ></v-text-field>
-          </form>
+          <v-text-field
+            name="email"
+            label="Email"
+            v-model="email"
+          ></v-text-field>
+          <v-text-field
+            name="password"
+            label="Password"
+            type="password"
+            v-model="password"
+          ></v-text-field>
           <div class="error" v-html="errors" />
           <br />
-          <v-btn primary dark @click="register">Register</v-btn>
+          <v-btn primary dark @click="login">Login</v-btn>
         </div>
       </div>
     </v-flex>
@@ -39,9 +37,9 @@ export default {
     }
   },
   methods: {
-    async register () {
+    async login () {
       try {
-        await AuthenticationService.register({
+        await AuthenticationService.login({
           email: this.email,
           password: this.password
         })
@@ -55,7 +53,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-  .error {
-    color: red;
-  }
 </style>

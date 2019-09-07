@@ -1,16 +1,21 @@
 <template>
   <div id="app">
-    <page-header />
-    <router-view />
+    <v-app>
+      <page-header />
+      <main>
+        <v-container fluid>
+          <router-view />
+        </v-container>
+      </main>
+    </v-app>
   </div>
 </template>
 
 <script>
-import PageHeader from './components/Header'
 export default {
   name: 'App',
   components: {
-    PageHeader
+    PageHeader: () => import('./components/Header')
   }
 }
 </script>
@@ -23,8 +28,5 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
-}
-.input-group--text-field input {
-  border-bottom: .5px solid black;
 }
 </style>
