@@ -1,29 +1,23 @@
 <template>
   <v-layout column>
     <v-flex xs6 offset-xs3>
-      <div class="white elevation-2">
-        <v-toolbar flat dense class="primary" light>
-          <v-toolbar-title class="white--text">Register</v-toolbar-title>
-        </v-toolbar>
-        <div class="pl-4 pr-4 pt-2 pb-2">
-          <form autocomplete="off">
-            <v-text-field
-              name="email"
-              label="Email"
-              v-model="email"
-            ></v-text-field>
-            <v-text-field
-              name="password"
-              label="Password"
-              type="password"
-              v-model="password"
-            ></v-text-field>
-          </form>
-          <div class="error" v-html="errors" />
-          <br />
-          <v-btn primary dark @click="register">Register</v-btn>
-        </div>
-      </div>
+      <panel title="Register">
+        <form autocomplete="off">
+          <v-text-field
+            name="email"
+            label="Email"
+            v-model="email"
+          ></v-text-field>
+          <v-text-field
+            name="password"
+            label="Password"
+            type="password"
+            v-model="password"
+          ></v-text-field>
+        </form>
+        <div class="error" v-html="errors" />
+        <v-btn primary dark @click="register">Register</v-btn>
+      </panel>
     </v-flex>
   </v-layout>
 </template>
@@ -51,6 +45,9 @@ export default {
         this.errors = err.response.data.error
       }
     }
+  },
+  components: {
+    Panel: () => import('@/components/Panel')
   }
 }
 </script>
