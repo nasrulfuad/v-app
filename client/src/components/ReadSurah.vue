@@ -9,13 +9,15 @@
 </template>
 
 <script>
+import SurahsService from '@/services/SurahsService'
 export default {
   data: () => ({
 
   }),
   async mounted () {
     const idSurah = this.$store.state.route.params.idSurah
-    console.log(idSurah)
+    const data = await (await SurahsService.read(idSurah)).json()
+    console.log(data)
   },
   components: {
     Panel: () => import('@/components/Panel')
