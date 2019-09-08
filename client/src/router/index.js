@@ -24,6 +24,11 @@ export default new Router({
       path: '/surahs',
       name: 'surahs',
       component: () => import('@/components/Surahs')
+    },
+    {
+      path: '/surah',
+      name: 'surah',
+      component: () => import('@/components/Surah')
     }
   ]
 })
