@@ -1,7 +1,7 @@
 <template>
   <v-toolbar fixed class="primary" dark>
     <v-toolbar-title class="mr-4 home" @click="navigateTo({ name: 'root' })">
-      TabTracker
+      Qodr Quran
     </v-toolbar-title>
 
     <v-toolbar-items>

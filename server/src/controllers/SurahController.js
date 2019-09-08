@@ -4,16 +4,13 @@ const fetch = require('node-fetch')
 module.exports = {
   index: async (req, res) => {
     try {
-      const surah = await Surah.findByPk(req.params.surah, {
-        attributes: { exclude: ['createdAt', 'updatedAt'] },
-        include: [
-          {
-            model: Ayah,
-            attributes: { exclude: ['createdAt', 'updatedAt'] }
-          }
-        ]
+      const surahs = await Surah.findAll({
+        attributes: { exclude: ['createdAt', 'updatedAt'] }
       })
-      return res.json(surah)
+      return res.json({
+        status: 'Success',
+        data: surahs
+      })
     } catch (err) {
       console.log(err)
       return res.status(500).json({
@@ -21,25 +18,22 @@ module.exports = {
       })
     }
   },
-  generateSurahs: async (req, res) => {
+  show: async (req, res) => {
     try {
-      const { data } = await (await fetch('http://api.alquran.cloud/v1/surah')).json()
-      data.forEach(async surah => {
-        const { number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType } = surah
-        try {
-          await Surah.create({ number, name, englishName, englishNameTranslation, numberOfAyahs, revelationType })
-        } catch (err) {
-          console.log(err)
-          return true
-        }
+      const surahs = await Surah.findByPk(req.params.surah, {
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        include: [
+          { model: Ayah, attributes: { exclude: ['createdAt', 'updatedAt'] } }
+        ]
       })
       return res.json({
-        message: 'Success generate surahs'
+        status: 'Success',
+        data: surahs
       })
     } catch (err) {
       console.log(err)
-      return res.json({
-        error: 'Internal server error'
+      return res.status(500).json({
+        error: 'An error has occured trying to fetch the single surah'
       })
     }
   },
@@ -52,13 +46,47 @@ module.exports = {
 
       ayahs.forEach(async ayah => {
         const { text, numberInSurah, juz, sajda } = ayah
+        const sujud = (typeof sajda === 'object') ? !false : false
         try {
-          await Ayah.create({ text, numberInSurah, juz, sajda, SurahId: surah.id })
+          await Ayah.create({ text, numberInSurah, juz, sajda: sujud, SurahId: surah.id })
         } catch (err) {
           console.log(err)
-          return true
+          return false
         }
       })
+      return res.json({
+        message: 'Success generate surahs'
+      })
+    } catch (err) {
+      console.log(err)
+      return res.json({
+        error: 'Internal server error'
+      })
+    }
+  },
+  generateSurahsAndAyahs: async (req, res) => {
+    try {
+      const fromTotal = [51, 80]
+      let die = false
+
+      for (fromTotal[0]; fromTotal[0] <= fromTotal[1]; fromTotal[0]++) {
+        const { data } = await (await fetch(`http://api.alquran.cloud/v1/surah/${fromTotal[0]}`)).json()
+        const { name, englishName, englishNameTranslation, numberOfAyahs, revelationType, ayahs } = data
+
+        const surah = await Surah.create({ name, englishName, englishNameTranslation, numberOfAyahs, revelationType })
+        ayahs.every(async ayah => {
+          const { text, numberInSurah, juz, sajda } = ayah
+          const sujud = (typeof sajda === 'object') ? !false : false
+          try {
+            await Ayah.create({ text, numberInSurah, juz, sajda: sujud, SurahId: surah.id })
+          } catch (err) {
+            console.log(err)
+            die = true
+            return false
+          }
+        })
+        if (die) break
+      }
       return res.json({
         message: 'Success generate surahs'
       })

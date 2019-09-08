@@ -7,6 +7,9 @@ module.exports = app => {
   app.post('/login', AuthenticationController.login)
 
   app.get('/surah', SurahController.index)
+  // Generate all surahs and ayahs
+  app.post('/surah', SurahController.generateSurahsAndAyahs)
+  app.get('/surah/:surah', SurahController.show)
+  // Generate surah and ayahs by id
   app.post('/surah/:surah', SurahController.generateAyahs)
-  app.get('/surah/:surah', SurahController.index)
 }
