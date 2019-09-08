@@ -1,14 +1,12 @@
 <template>
-  <div id="app">
-    <v-app>
-      <page-header />
-      <main>
-        <v-container fluid>
-          <router-view />
-        </v-container>
-      </main>
-    </v-app>
-  </div>
+  <v-app>
+    <page-header />
+    <main class="pt-2">
+      <v-container fluid class="min-height">
+        <router-view />
+      </v-container>
+    </main>
+  </v-app>
 </template>
 
 <script>
@@ -27,6 +25,10 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  padding-top: 60px;
+  box-sizing: border-box;
+}
+.min-height {
+  min-height: 0% !important;
 }
 </style>

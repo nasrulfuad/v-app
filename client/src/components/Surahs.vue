@@ -1,29 +1,29 @@
 <template>
-  <v-layout column>
+  <v-layout column class="pa-0">
     <v-flex md10 sm12 offset-md1 offset-sm0>
       <panel title="Surahs">
-        <v-expansion-panel inset class="my-3">
-          <v-expansion-panel-content v-for="surah in surahs" :key="surah.id">
-            <div slot="header">{{ surah.chapter_number }} - {{ surah.name_simple }}</div>
-            <v-card class="grey lighten-3">
-              <div class="right mr-3 mt-3">
-                  <v-icon>beenhere</v-icon> {{ surah.revelation_place === 'makkah' ? 'Makkah' : 'Madinah' }}
-                </div>
-              <v-card-title primary-title>
-                <h3 class="display-1 text-arabic mb-1 position-title">{{ surah.name_arabic }}</h3>
-                <h3 class="body-1 mb-0 mt-1 position-title">{{ surah.englishNameTranslation }}</h3>
-              </v-card-title>
-              <v-card-text>
-                <div>
-                  <p class="grey--text">Total ayahs {{ surah.verses_count }}</p>
-                  <p>{{ surah.InfoSurah.short_text }}</p>
-                  <v-divider></v-divider>
-                  <p class="caption grey--text">{{ surah.InfoSurah.source }}</p>
-                </div>
-              </v-card-text>
-            </v-card>
-          </v-expansion-panel-content>
-        </v-expansion-panel>
+       <v-data-table
+          v-bind:headers="headers"
+          :items="items"
+          v-bind:pagination.sync="pagination"
+          hide-actions
+          class="elevation-1 my-2"
+        >
+          <template slot="items" slot-scope="props">
+            <td class="text-xs-center">{{ props.item.no }}</td>
+            <td class="text-xs-center">{{ props.item.name }}</td>
+            <td class="text-xs-center text-arabic">{{ props.item.nameArabic }}</td>
+            <td class="text-xs-center">{{ props.item.translationInEnglish }}</td>
+            <td class="text-xs-center">{{ props.item.revelationPlace }}</td>
+            <td class="text-xs-center">{{ props.item.totalAyahs }}</td>
+            <td class="text-xs-center">
+              <v-btn outline class="primary--text" @click="navigateTo({ name: 'read', params: { idSurah: props.item.no } })">Read</v-btn>
+            </td>
+          </template>
+        </v-data-table>
+        <div class="text-xs-center pt-2">
+          <v-pagination v-model="pagination.page" :length="pages"></v-pagination>
+        </div>
       </panel>
     </v-flex>
   </v-layout>
@@ -34,20 +34,76 @@ import SurahsService from '@/services/SurahsService'
 
 export default {
   data: () => ({
-    surahs: null,
-    surahDetails: null
+    pagination: { rowsPerPage: 10 },
+    headers: [
+      {
+        text: 'No',
+        align: 'center',
+        value: 'no'
+      },
+      {
+        text: 'Name (Simple)',
+        align: 'center',
+        value: 'nameSimple',
+        sortable: false
+      },
+      {
+        text: 'Name (Arabic)',
+        align: 'center',
+        value: 'nameArabic',
+        sortable: false
+      },
+      {
+        text: 'Translation in English',
+        align: 'center',
+        value: 'translationInEnglish',
+        sortable: false
+      },
+      {
+        text: 'Revelation Place',
+        align: 'center',
+        value: 'revelationPlace',
+        sortable: false
+      },
+      {
+        text: 'Total Ayahs',
+        align: 'center',
+        value: 'totalAyahs'
+      },
+      {
+        text: 'Action',
+        align: 'center',
+        sortable: false,
+        value: 'action'
+      }
+    ],
+    items: []
   }),
   async mounted () {
     const { data } = await (await SurahsService.index())
-    this.surahs = data.data
-    console.log(data.data)
+    const surahs = data.data.map(surah => (
+      {
+        no: surah.chapter_number,
+        name: surah.name_simple,
+        nameArabic: surah.name_arabic,
+        translationInEnglish: surah.englishNameTranslation,
+        revelationPlace: surah.revelation_place === 'makkah' ? 'Mekkah' : 'Madinah',
+        totalAyahs: surah.verses_count
+      }
+    ))
+    this.items = surahs
   },
   components: {
     Panel: () => import('@/components/Panel')
   },
   methods: {
-    showDetails: id => {
-      console.log('id')
+    navigateTo (route) {
+      this.$router.push(route)
+    }
+  },
+  computed: {
+    pages () {
+      return this.pagination.rowsPerPage ? Math.ceil(this.items.length / this.pagination.rowsPerPage) : 0
     }
   }
 }
@@ -61,7 +117,7 @@ export default {
     line-height: 0;
   }
   .text-arabic {
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 700;
     font-family: 'Scheherazade', serif;
     text-shadow: 2px 2px 2px #aaa;
