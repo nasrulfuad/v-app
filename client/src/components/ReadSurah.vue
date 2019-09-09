@@ -1,10 +1,16 @@
 <template>
   <v-layout column>
-    <v-flex md12 sm12 offset-sm0>
-      <panel title="Read Surah" class="my-panel-read">
-        <div class="text-arabic" v-for="verse in verses" :key="verse.id">
-          {{ verse.text_madani }}
-           <v-divider></v-divider>
+    <v-flex md10 sm12 offset-md1>
+      <panel :title="title" class="my-panel-read">
+        <div class="text-arabic text-arabic-title">
+         بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
+        </div>
+        <div>
+          <div class="ma-0 my-1 my-ayah" v-for="(ayah, i) in ayahs" :key="ayah" left>
+            <p class="text-arabic">{{ ayah }}</p>
+            <p class="text-translate"><span class="number">{{ i }}.</span> {{ translation[i] }}</p>
+            <v-divider></v-divider>
+          </div>
         </div>
       </panel>
     </v-flex>
@@ -15,14 +21,17 @@
 import SurahsService from '@/services/SurahsService'
 export default {
   data: () => ({
-    page: 1,
-    verses: []
+    title: '',
+    ayahs: [],
+    translation: []
   }),
   async mounted () {
     const idSurah = this.$store.state.route.params.idSurah
-    const { data } = await (await SurahsService.getAyahs(idSurah, 1))
-    console.log(data)
-    this.verses = data.verses
+    const { results } = await (await SurahsService.readSurah(idSurah)).data
+    const { text, translations } = results[idSurah]
+    this.title = `Read Surah ${results[idSurah].name_latin}`
+    this.ayahs = text
+    this.translation = translations.id.text
   },
   components: {
     Panel: () => import('@/components/Panel')
@@ -31,10 +40,24 @@ export default {
 </script>
 
 <style scoped>
+.text-arabic-title {
+  text-align: center !important;
+}
 .text-arabic {
   font-size: 35px;
   font-weight: 700;
   font-family: 'Scheherazade', serif;
   text-shadow: 1px 1px 1px #aaa;
+}
+.text-translate {
+  font-size: 16px;
+  text-align: left;
+}
+.my-ayah {
+  text-align: right;
+}
+.number {
+  font-size: 20px;
+  font-weight: bold;
 }
 </style>

@@ -11,5 +11,6 @@ module.exports = app => {
   // Generate all surahs
   app.post('/surah', SurahController.generateSurahs)
   app.post('/surah/info', SurahController.generateInfoSurah)
+  app.get('/surah/read/:id', StaticController.showAyah)
   app.get('/surah/:id', StaticController.show)
 }
