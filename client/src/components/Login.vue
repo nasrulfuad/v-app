@@ -13,7 +13,13 @@
           type="password"
           v-model="password"
         ></v-text-field>
-        <div class="error" v-html="errors" />
+        <v-alert
+          error
+          :value="alert"
+          transition="scale-transition"
+        >
+        {{ errors }}
+        </v-alert>
         <v-btn primary dark @click="login">Login</v-btn>
       </panel>
     </v-flex>
@@ -25,6 +31,7 @@ import AuthenticationService from '@/services/AuthenticationService'
 export default {
   data () {
     return {
+      alert: false,
       email: '',
       password: '',
       errors: ''
@@ -32,15 +39,24 @@ export default {
   },
   methods: {
     async login () {
+      this.$store.dispatch('setLoader', true)
       try {
         const response = await AuthenticationService.login({
           email: this.email,
           password: this.password
         })
+
         this.$store.dispatch('setToken', response.data.token)
         this.$store.dispatch('setUser', response.data.user)
+
+        this.alert = false
+        // setTimeout(() => {
+        //   this.$router.push({ name: 'root' })
+        //   // this.$store.dispatch('setLoader', false)
+        // }, 1000)
       } catch (err) {
         this.errors = err.response.data.error
+        this.alert = true
       }
     }
   },

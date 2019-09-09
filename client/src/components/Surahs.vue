@@ -39,30 +39,30 @@ export default {
       {
         text: 'No',
         align: 'center',
-        value: 'no'
+        value: 'index'
       },
       {
         text: 'Name (Latin)',
         align: 'center',
-        value: 'nameLatin',
+        value: 'latin',
         sortable: false
       },
       {
         text: 'Name (Arabic)',
         align: 'center',
-        value: 'nameArabic',
+        value: 'arabic',
         sortable: false
       },
       {
         text: 'Translation in Indonesian',
         align: 'center',
-        value: 'translationInIndonesian',
+        value: 'translation',
         sortable: false
       },
       {
         text: 'Total Ayahs',
         align: 'center',
-        value: 'totalAyahs'
+        value: 'ayah_count'
       },
       {
         text: 'Action',

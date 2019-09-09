@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <page-header />
+    <v-progress-linear :active="isLoading" height="4" class="loader" v-bind:indeterminate="true"></v-progress-linear>
     <main class="pt-2">
       <v-container fluid class="min-height">
         <router-view />
@@ -12,6 +13,11 @@
 <script>
 export default {
   name: 'App',
+  data () {
+    return {
+      isLoading: true
+    }
+  },
   components: {
     PageHeader: () => import('./components/Header')
   }
@@ -31,5 +37,10 @@ export default {
 }
 .min-height {
   min-height: 0% !important;
+}
+.loader {
+  z-index: 99;
+  position: absolute;
+  transform: translateY(-75px);
 }
 </style>
