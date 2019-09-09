@@ -1,5 +1,5 @@
 <template>
-  <v-layout column v-scroll="onScroll">
+  <v-layout column>
     <v-flex md12 sm12 offset-md0>
       <panel
         id="scroll-target"
@@ -9,7 +9,7 @@
          بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
         </div>
         <div>
-          <div class="ma-0 pb-2 mt-3 my-ayah py-3" v-for="(ayah, i) in ayahs" :key="ayah" left>
+          <div class="text-arabic, ma-0 pb-2 mt-3 my-ayah py-3" v-for="(ayah, i) in ayahs" :key="ayah" left :data-ayah="i">
             <p class="text-arabic">{{ ayah }}</p>
             <p class="text-translate"><span class="number">{{ i }}.</span> {{ translation[i] }}</p>
             <v-divider v-if="+i !== Object.keys(ayahs).length"></v-divider>
@@ -17,20 +17,74 @@
         </div>
       </panel>
     </v-flex>
-    <v-fab-transition>
+    <v-speed-dial
+      v-model="fab"
+      bottom
+      right
+      fixed
+      direction="top"
+      hover
+      transition="slide-y-reverse-transition"
+    >
       <v-btn
-        fixed
+        slot="activator"
+        class="blue darken-2"
         dark
         fab
-        bottom
-        right
-        class="primary mb-0"
-        v-show="!hidden"
+        hover
+        v-model="fab"
+      >
+        <v-icon>menu</v-icon>
+        <v-icon>menu_open</v-icon>
+      </v-btn>
+      <v-btn
+        v-tooltip:left="{ html: 'Scroll To Bottom' }"
+        fab
+        dark
+        small
+        class="cyan"
+        @click="scrollToBottom"
+      >
+        <v-icon>keyboard_arrow_down</v-icon>
+      </v-btn>
+      <v-btn
+        v-tooltip:left="{ html: 'Jump to ayah number' }"
+        fab
+        dark
+        small
+        class="indigo"
+        @click="openDialog"
+      >
+        <v-icon>search</v-icon>
+      </v-btn>
+      <v-btn
+        v-tooltip:left="{ html: 'Scroll To Top' }"
+        fab
+        dark
+        small
+        class="cyan"
         @click="scrollToTop"
       >
         <v-icon>keyboard_arrow_up</v-icon>
       </v-btn>
-    </v-fab-transition>
+    </v-speed-dial>
+    <v-dialog v-model="dialog" persistent>
+      <v-card>
+        <v-card-title class="headline">Jump to number ayah :</v-card-title>
+        <v-card-text>
+          <v-text-field
+            name="input-number-ayah"
+            label="Number"
+            v-model="jumpToAyahInput"
+          ></v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn class="green--text darken-1" flat="flat" @click.native="dialog = false">Cancel</v-btn>
+          <v-btn class="green--text darken-1" flat="flat" @click="jumpToAyah">Jump</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-layout>
 </template>
 
@@ -43,7 +97,10 @@ export default {
       ayahs: [],
       translation: [],
       hidden: true,
-      offsetY: 0
+      offsetY: 0,
+      fab: false,
+      dialog: true,
+      jumpToAyahInput: 0
     }
   },
   async mounted () {
@@ -59,16 +116,27 @@ export default {
   },
   methods: {
     scrollToTop () {
-      // document.documentElement.scrollTop = 0
       window.scroll({
         top: 0,
-        left: 0,
         behavior: 'smooth'
       })
     },
-    onScroll () {
-      this.offsetY = window.pageYOffset || document.documentElement.scrollTop
-      this.hidden = this.offsetY > 400 ? !true : true
+    scrollToBottom () {
+      window.scroll({
+        top: document.body.scrollHeight,
+        behavior: 'smooth'
+      })
+    },
+    openDialog () {
+      this.dialog = true
+    },
+    jumpToAyah () {
+      this.dialog = false
+      if (this.jumpToAyahInput > 2) {
+        const elem = document.querySelector(`[data-ayah='${this.jumpToAyahInput - 2}']`)
+        return elem.scrollIntoView({ behavior: 'smooth' })
+      }
+      this.scrollToTop()
     }
   }
 }
