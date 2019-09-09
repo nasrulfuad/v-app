@@ -4,7 +4,7 @@ export default {
   index () {
     return Api().get('surah')
   },
-  read (surahId) {
-    return Api.get(`surah/ayahs/${surahId}`)
+  show (id) {
+    return Api().get(`surah/${id}`)
   }
 }

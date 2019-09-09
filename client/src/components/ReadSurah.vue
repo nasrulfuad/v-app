@@ -2,7 +2,10 @@
   <v-layout column>
     <v-flex md12 sm12 offset-sm0>
       <panel title="Read Surah" class="my-panel-read">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur cupiditate a, praesentium asperiores neque quis fugiat voluptatum iure corrupti maiores? Beatae ea adipisci ullam odio mollitia veritatis illo magni quia!
+        <div class="text-arabic" v-for="verse in verses" :key="verse.id">
+          {{ verse.text_madani }}
+           <v-divider></v-divider>
+        </div>
       </panel>
     </v-flex>
   </v-layout>
@@ -12,12 +15,14 @@
 import SurahsService from '@/services/SurahsService'
 export default {
   data: () => ({
-
+    page: 1,
+    verses: []
   }),
   async mounted () {
     const idSurah = this.$store.state.route.params.idSurah
-    const data = await (await SurahsService.read(idSurah)).json()
+    const { data } = await (await SurahsService.getAyahs(idSurah, 1))
     console.log(data)
+    this.verses = data.verses
   },
   components: {
     Panel: () => import('@/components/Panel')
@@ -26,7 +31,10 @@ export default {
 </script>
 
 <style scoped>
-.my-panel-read {
-  height: 1000px;
+.text-arabic {
+  font-size: 35px;
+  font-weight: 700;
+  font-family: 'Scheherazade', serif;
+  text-shadow: 1px 1px 1px #aaa;
 }
 </style>

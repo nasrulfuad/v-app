@@ -12,7 +12,6 @@ app.use(express.json())
 app.use(cors())
 
 require('./routes.js')(app)
-
 sequelize.sync({ force: false })
   .then(() => {
     app.listen(port)

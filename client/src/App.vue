@@ -19,6 +19,7 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css?family=Scheherazade:400,700&subset=arabic');
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -10,14 +10,14 @@
           class="elevation-1 my-2"
         >
           <template slot="items" slot-scope="props">
-            <td class="text-xs-center">{{ props.item.no }}</td>
-            <td class="text-xs-center">{{ props.item.name }}</td>
-            <td class="text-xs-center text-arabic">{{ props.item.nameArabic }}</td>
-            <td class="text-xs-center">{{ props.item.translationInEnglish }}</td>
-            <td class="text-xs-center">{{ props.item.revelationPlace }}</td>
-            <td class="text-xs-center">{{ props.item.totalAyahs }}</td>
+            <td class="text-xs-center">{{ props.item.index }}</td>
+            <td class="text-xs-center">{{ props.item.latin }}</td>
+            <td class="text-xs-center text-arabic">{{ props.item.arabic }}</td>
+            <td class="text-xs-center">{{ props.item.translation }}</td>
+            <td class="text-xs-center">{{ props.item.ayah_count }}</td>
             <td class="text-xs-center">
-              <v-btn outline class="primary--text" @click="navigateTo({ name: 'read', params: { idSurah: props.item.no } })">Read</v-btn>
+              <v-btn small outline class="primary--text" @click="navigateTo({ name: 'read', params: { idSurah: props.item.index } })">Read</v-btn>
+              <v-btn small outline class="deep-orange--text" @click="navigateTo({ name: 'show', params: { idSurah: props.item.index } })">Detail</v-btn>
             </td>
           </template>
         </v-data-table>
@@ -42,9 +42,9 @@ export default {
         value: 'no'
       },
       {
-        text: 'Name (Simple)',
+        text: 'Name (Latin)',
         align: 'center',
-        value: 'nameSimple',
+        value: 'nameLatin',
         sortable: false
       },
       {
@@ -54,15 +54,9 @@ export default {
         sortable: false
       },
       {
-        text: 'Translation in English',
+        text: 'Translation in Indonesian',
         align: 'center',
-        value: 'translationInEnglish',
-        sortable: false
-      },
-      {
-        text: 'Revelation Place',
-        align: 'center',
-        value: 'revelationPlace',
+        value: 'translationInIndonesian',
         sortable: false
       },
       {
@@ -81,17 +75,8 @@ export default {
   }),
   async mounted () {
     const { data } = await (await SurahsService.index())
-    const surahs = data.data.map(surah => (
-      {
-        no: surah.chapter_number,
-        name: surah.name_simple,
-        nameArabic: surah.name_arabic,
-        translationInEnglish: surah.englishNameTranslation,
-        revelationPlace: surah.revelation_place === 'makkah' ? 'Mekkah' : 'Madinah',
-        totalAyahs: surah.verses_count
-      }
-    ))
-    this.items = surahs
+    this.$store.dispatch('setSurah', data.data)
+    this.items = data.data
   },
   components: {
     Panel: () => import('@/components/Panel')
@@ -110,7 +95,6 @@ export default {
 </script>
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css?family=Scheherazade:400,700&subset=arabic');
   .position-title {
     width: 100%;
     text-align: center;
