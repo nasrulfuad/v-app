@@ -9,7 +9,8 @@ export default new Vuex.Store({
     token: null,
     user: null,
     isUserLoggedIn: false,
-    surah: []
+    surah: [],
+    title: ''
   },
   mutations: {
     setToken (state, token) {
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     setSurah (state, surah) {
       state.surah = surah
+    },
+    setTitle (state, title) {
+      state.title = title
     }
   },
   actions: {
@@ -32,6 +36,9 @@ export default new Vuex.Store({
     },
     setSurah ({ commit }, surah) {
       commit('setSurah', surah)
+    },
+    setTitle ({ commit }, title) {
+      commit('setTitle', title)
     }
   }
 })
