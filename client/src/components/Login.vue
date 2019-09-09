@@ -1,6 +1,7 @@
 <template>
   <v-layout column>
     <v-flex xs6 offset-xs3>
+      <v-progress-linear :active="isLoading" height="4" class="loader" v-bind:indeterminate="true"></v-progress-linear>
       <panel title="Login">
         <v-text-field
           name="email"
@@ -34,13 +35,14 @@ export default {
       alert: false,
       email: '',
       password: '',
-      errors: ''
+      errors: '',
+      isLoading: false
     }
   },
   methods: {
     async login () {
-      this.$store.dispatch('setLoader', true)
       try {
+        this.isLoading = true
         const response = await AuthenticationService.login({
           email: this.email,
           password: this.password
@@ -50,13 +52,14 @@ export default {
         this.$store.dispatch('setUser', response.data.user)
 
         this.alert = false
-        // setTimeout(() => {
-        //   this.$router.push({ name: 'root' })
-        //   // this.$store.dispatch('setLoader', false)
-        // }, 1000)
+        setTimeout(() => {
+          this.isLoading = false
+          this.$router.push({ name: 'root' })
+        }, 1000)
       } catch (err) {
         this.errors = err.response.data.error
         this.alert = true
+        this.isLoading = false
       }
     }
   },
@@ -66,6 +69,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 </style>

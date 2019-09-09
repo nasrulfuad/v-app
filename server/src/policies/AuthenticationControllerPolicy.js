@@ -1,19 +1,22 @@
 const Joi = require('joi')
 
-const badReq = (res, msg) => res.status(400).json(msg)
+const badReq = (res, msg) => {
+  return res.status(400).json(msg)
+}
 
 module.exports = {
   register (req, res, next) {
     const schema = {
       email: Joi.string().email(),
       password: Joi.string().regex(
-        new RegExp('^[a-zA-Z0-9]{8,32}$')
+        new RegExp('^[a-zA-Z0-9]{6,32}$')
       )
     }
 
     const { error } = Joi.validate(req.body, schema)
 
     if (error) {
+      console.log(error.details[0])
       switch (error.details[0].context.key) {
         case 'email' :
           badReq(res, {
@@ -36,7 +39,8 @@ module.exports = {
             error: 'Invalid registration information'
           })
       }
+    } else {
+      next()
     }
-    next()
   }
 }

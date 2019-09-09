@@ -1,7 +1,6 @@
 <template>
   <v-app>
     <page-header />
-    <v-progress-linear :active="isLoading" height="4" class="loader" v-bind:indeterminate="true"></v-progress-linear>
     <main class="pt-2">
       <v-container fluid class="min-height">
         <router-view />
@@ -41,6 +40,8 @@ export default {
 .loader {
   z-index: 99;
   position: absolute;
-  transform: translateY(-75px);
+  top: 0;
+  left: 0;
+  margin-top: 0;
 }
 </style>
