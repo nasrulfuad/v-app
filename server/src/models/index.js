@@ -22,4 +22,10 @@ fs
 db.sequelize = sequelize
 db.Sequelize = Sequelize
 
+db.Ayah.belongsTo(db.Surah)
+db.Surah.hasMany(db.Ayah)
+
+db.InfoSurah.belongsTo(db.Surah)
+db.Surah.hasOne(db.InfoSurah)
+
 module.exports = db
