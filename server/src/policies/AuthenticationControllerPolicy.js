@@ -16,7 +16,6 @@ module.exports = {
     const { error } = Joi.validate(req.body, schema)
 
     if (error) {
-      console.log(error.details[0])
       switch (error.details[0].context.key) {
         case 'email' :
           badReq(res, {
@@ -26,12 +25,7 @@ module.exports = {
           break
         case 'password' :
           badReq(res, {
-            error: `The password provided failed to match the following rules :
-              <br>
-              1. It must contain ONLY the following characters : lowercase, uppercase, numerics,
-              <br>
-              2. It must be at least 8 characters in length and not greater than 32 characters in length
-            `
+            error: 'Password length minimal 6 and maximal 32'
           })
           break
         default :

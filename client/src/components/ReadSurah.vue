@@ -99,7 +99,7 @@ export default {
       hidden: true,
       offsetY: 0,
       fab: false,
-      dialog: true,
+      dialog: false,
       jumpToAyahInput: 0
     }
   },
@@ -128,12 +128,14 @@ export default {
       })
     },
     openDialog () {
+      this.jumpToAyahInput = 0
       this.dialog = true
     },
     jumpToAyah () {
       this.dialog = false
       if (this.jumpToAyahInput > 2) {
         const elem = document.querySelector(`[data-ayah='${this.jumpToAyahInput - 2}']`)
+        if (elem === null) return
         return elem.scrollIntoView({ behavior: 'smooth' })
       }
       this.scrollToTop()
